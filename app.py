@@ -1,13 +1,3 @@
-import logging
-import json
-import requests
-from flask import Flask
-
-app = Flask(__name__)
-
-# ロギング設定
-logging.basicConfig(level=logging.DEBUG)
-
 def chat_with_gpt(user_message):
     url = "https://openrouter.ai/api/v1/chat/completions"
     headers = {
@@ -25,21 +15,19 @@ def chat_with_gpt(user_message):
     try:
         response = requests.post(url, headers=headers, data=json.dumps(payload))
         res_json = response.json()
-        app.logger.debug("OpenRouterステータスコード: %s", response.status_code)
-        app.logger.debug("OpenRouterレスポンス: %s", json.dumps(res_json, indent=2, ensure_ascii=False))
 
+        # ログを出す（render のログで確認できる）
+        app.logger.error("OpenRouterステータスコード: %s", response.status_code)
+        app.logger.error("OpenRouterレスポンス: %s", json.dumps(res_json, ensure_ascii=False))
+
+        # 分岐して安全に取り出す
         if 'choices' in res_json:
             return res_json['choices'][0]['message']['content']
         elif 'error' in res_json:
-            error_message = res_json['error'].get('message', '詳細不明')
-            app.logger.error("OpenRouterエラー: %s", error_message)
-            return f"〖エラー〗{error_message}"
+            return f"❌ OpenRouterエラー: {res_json['error'].get('message', '詳細不明')}"
         else:
-            app.logger.error("OpenRouterから予期しない形式の返答がありました。")
-            return "〖エラー〗OpenRouterから予期しない形式の返答がきました"
+            return "❌ OpenRouterから不明な形式のレスポンスが返ってきました。"
 
     except Exception as e:
-        app.logger.exception("OpenRouterで例外が発生しました。")
-        return "〖例外発生〗AIからの返答に問題が発生しました…！"
-
-
+        app.logger.exception("OpenRouterで例外が発生: %s", e)
+        return "⚠️ 例外が発生しました。AIの返事がうまく取れなかったよ。"
