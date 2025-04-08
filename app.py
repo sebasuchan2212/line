@@ -22,4 +22,3 @@ def chat_with_gpt(user_message):
     except Exception as e:
         print("OpenRouterからエラーが返ってきました:", response.text)
         return "ごめん、AIの応答で問題が起きたよ…！"
-
