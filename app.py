@@ -5,6 +5,7 @@ import os
 
 app = Flask(__name__)
 
+# 環境変数からトークン取得
 LINE_CHANNEL_ACCESS_TOKEN = os.environ["LINE_TOKEN"]
 LINE_REPLY_ENDPOINT = 'https://api.line.me/v2/bot/message/reply'
 HEADERS = {
@@ -14,6 +15,7 @@ HEADERS = {
 
 # OpenRouter API設定（無料枠あり）
 OPENROUTER_API_KEY = os.environ["OPENROUTER_KEY"]
+
 def chat_with_gpt(user_message):
     url = "https://openrouter.ai/api/v1/chat/completions"
     headers = {
@@ -40,4 +42,8 @@ def webhook():
             }
             requests.post(LINE_REPLY_ENDPOINT, headers=HEADERS, data=json.dumps(payload))
     return 'OK'
-  
+
+# === ここがRender用のポート対応 ===
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
