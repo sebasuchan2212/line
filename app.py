@@ -1,11 +1,11 @@
 def chat_with_gpt(user_message):
     url = "https://openrouter.ai/api/v1/chat/completions"
     headers = {
-        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+        "Authorization": f"Bearer " + OPENROUTER_API_KEY,
         "Content-Type": "application/json"
     }
     payload = {
-        "model": "openai/gpt-3.5-turbo",
+        "model": "openrouter/openai/gpt-3.5-turbo",
         "messages": [
             {"role": "system", "content": "あなたは親切なLINEボットです。"},
             {"role": "user", "content": user_message}
@@ -16,6 +16,7 @@ def chat_with_gpt(user_message):
 
     try:
         res_json = response.json()
+        print("OpenRouterのステータスコード:", response.status_code)
         print("OpenRouterのレスポンス:", res_json)
 
         if "choices" in res_json:
