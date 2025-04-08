@@ -30,3 +30,4 @@ def chat_with_gpt(user_message):
         app.logger.error("OpenRouterで例外が発生: %s", e)
         app.logger.error("レスポンス内容: %s", response.text)
         return "【例外発生】AIからの返答に問題が発生しました…！"
+
