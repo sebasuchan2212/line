@@ -18,8 +18,15 @@ def chat_with_gpt(user_message):
         res_json = response.json()
         print("OpenRouterのレスポンス:", res_json)
 
-        return res_json['choices'][0]['message']['content']
+        if "choices" in res_json:
+            return res_json["choices"][0]["message"]["content"]
+        elif "error" in res_json:
+            return f"OpenRouterエラー: {res_json['error']}"
+        else:
+            return "エラー: 応答の形式が不正です。"
     except Exception as e:
-        print("OpenRouterからエラーが返ってきました:", response.text)
-        return "ごめん、AIの応答で問題が起きたよ…！"
+        print("OpenRouterから例外:", e)
+        print("レスポンス内容:", response.text)
+        return "ごめん、AIからの返事がうまく届かなかったよ！"
+
 
