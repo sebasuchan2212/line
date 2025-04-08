@@ -29,4 +29,3 @@ def chat_with_gpt(user_message):
         print("レスポンス内容:", response.text)
         return "ごめん、AIからの返事がうまく届かなかったよ！"
 
-
